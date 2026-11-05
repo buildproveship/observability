@@ -1,0 +1,32 @@
+# Local-only RRDPLAT-34 baseline. No application/customer telemetry.
+services:
+  prometheus:
+    image: prom/prometheus:v3.10.0@sha256:4a61322ac1103a0e3aea2a61ef1718422a48fa046441f299d71e660a3bc71ae9
+    ports:
+      - '127.0.0.1:19090:9090'
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=24h
+      - --storage.tsdb.retention.size=256MB
+      - --web.listen-address=0.0.0.0:9090
+      - --query.timeout=5s
+      - --query.max-concurrency=4
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks: [baseline]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ['no-new-privileges:true']
+    restart: 'no'
+    logging:
+      driver: json-file
+      options:
+        max-size: 5m
+        max-file: '2'
+networks:
+  baseline:
+    driver: bridge
+volumes:
+  prometheus-data:

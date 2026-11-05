@@ -1,0 +1,4 @@
+ Network rrdplat34-local_baseline  Creating
+ Network rrdplat34-local_baseline  Created
+Checking /etc/prometheus/prometheus.yml
+ SUCCESS: /etc/prometheus/prometheus.yml is valid prometheus config file syntax
