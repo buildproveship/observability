@@ -1,0 +1,4 @@
+services:
+  prometheus:
+    volumes:
+      - ./tests/fixtures/partial.yml:/etc/prometheus/prometheus.yml:ro
