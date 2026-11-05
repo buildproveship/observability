@@ -125,7 +125,8 @@ def runtime():
         assert inspected['NetworkSettings']['Ports'] == {
             '9090/tcp': [{'HostIp': '127.0.0.1', 'HostPort': '19091'}]}
         for case in CASES:
-            compose('up', '-d', '--force-recreate', 'tdm-health-fixture', case=case)
+            compose('up', '-d', '--force-recreate', '--wait', '--wait-timeout', '20',
+                    'tdm-health-fixture', case=case)
             changed_at = time.time()
             expected = 'available' if case == 'available' else 'probe-failed'
             wait_for(expected, after=changed_at)
@@ -134,7 +135,8 @@ def runtime():
                 assert 1.5 <= duration <= 3, duration
             print(json.dumps({'fixture_case': case, 'observed': expected,
                               'source': 'synthetic-fixture'}), flush=True)
-        compose('up', '-d', '--force-recreate', 'tdm-health-fixture')
+        compose('up', '-d', '--force-recreate', '--wait', '--wait-timeout', '20',
+                'tdm-health-fixture')
         wait_for('available', after=time.time())
         samples = query('{job="tdm-listener-fixture"}')['data']['result']
         names = {s['metric']['__name__'] for s in samples}

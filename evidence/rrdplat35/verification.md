@@ -45,8 +45,9 @@ strict metric/label selection, hard HTTP deadlines, fresh exporter-success gatin
 no missing-to-zero fallback, redirect rejection, and bounded body/probe sizes.
 Review tightened malformed query value-pair validation and added a regression test;
 all final checks above were repeated after that change. The test waits for a scrape
-started after each fixture replacement, avoiding accidental reuse of the previous
-case's sample.
+started after each replacement is confirmed listening by a bounded TCP healthcheck
+and Compose --wait. This also resolves Gitar review thread discussion_r4475920121:
+startup connection failures cannot satisfy an intended adversarial response test.
 
 ## Remaining scope
 

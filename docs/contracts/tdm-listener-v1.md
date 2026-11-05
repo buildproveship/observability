@@ -86,7 +86,8 @@ python3 tests/tdm_probe_runtime.py test
 
 `validate` checks that the profile defaults off, runs upstream `promtool check
 config` and blackbox `--config.check`. `test` starts only this fixture project,
-checks every synthetic response, simulates stale query time, stops the exporter,
+waits for each fixture TCP listener before recording its scrape cutoff, checks
+every synthetic response, simulates stale query time, stops the exporter,
 and finally removes its containers/networks. It does not remove baseline data or
 repository evidence. Fixture TSDB data is ephemeral tmpfs, deliberately discarded
 with the fixture container; preserve desired output before teardown.

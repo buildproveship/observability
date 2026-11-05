@@ -17,6 +17,11 @@ services:
     image: python:3.12.14-slim@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f
     user: '65534:65534'
     command: ['python', '-B', '/fixture/tdm_health.py']
+    healthcheck:
+      test: ['CMD', 'python', '-c', "import socket; socket.create_connection(('127.0.0.1', 3102), timeout=1).close()"]
+      interval: 1s
+      timeout: 2s
+      retries: 10
     environment:
       FIXTURE_CASE: '${FIXTURE_CASE:-available}'
     volumes:
