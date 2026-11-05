@@ -1,0 +1,27 @@
+# Synthetic-only scrape. No target URL, credential or scope substitution.
+global:
+  scrape_interval: 5s
+  scrape_timeout: 3s
+scrape_configs:
+  - job_name: tdm-listener-fixture
+    metrics_path: /probe
+    params:
+      module: [tdm_listener_fixture_v1]
+      target: ['http://tdm-health-fixture:3102/health']
+    static_configs:
+      - targets: ['blackbox-fixture:9115']
+        labels:
+          service: tdm
+          source: synthetic-fixture
+    relabel_configs:
+      - target_label: instance
+        replacement: tdm-fixture
+    sample_limit: 100
+    label_limit: 8
+    body_size_limit: 64KB
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'probe_success|probe_duration_seconds'
+        action: keep
+      - regex: '__name__|job|instance|service|source'
+        action: labelkeep

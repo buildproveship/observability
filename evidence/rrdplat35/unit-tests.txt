@@ -1,0 +1,31 @@
+test_bad_clock_is_unknown (test_baseline.HealthTests.test_bad_clock_is_unknown) ... ok
+test_connection_failure (test_baseline.HealthTests.test_connection_failure) ... ok
+test_entire_slow_http_exchange_is_bounded (test_baseline.HealthTests.test_entire_slow_http_exchange_is_bounded) ... ok
+test_extra_or_foreign_target_is_unknown (test_baseline.HealthTests.test_extra_or_foreign_target_is_unknown) ... ok
+test_healthy_requires_all_checks (test_baseline.HealthTests.test_healthy_requires_all_checks) ... ok
+test_lifecycle_bounded_and_local (test_baseline.HealthTests.test_lifecycle_bounded_and_local) ... ok
+test_malformed_api_is_unknown (test_baseline.HealthTests.test_malformed_api_is_unknown) ... ok
+test_missing_targets_and_samples_are_unknown (test_baseline.HealthTests.test_missing_targets_and_samples_are_unknown) ... ok
+test_nonfinite_or_future_sample_is_unknown (test_baseline.HealthTests.test_nonfinite_or_future_sample_is_unknown) ... ok
+test_partial_scrape_failure (test_baseline.HealthTests.test_partial_scrape_failure) ... ok
+test_query_failure_is_unknown (test_baseline.HealthTests.test_query_failure_is_unknown) ... ok
+test_query_source_must_match (test_baseline.HealthTests.test_query_source_must_match) ... ok
+test_readiness_body_is_verified (test_baseline.HealthTests.test_readiness_body_is_verified) ... ok
+test_redirects_rejected (test_baseline.HealthTests.test_redirects_rejected) ... ok
+test_stale_sample_despite_fresh_target (test_baseline.HealthTests.test_stale_sample_despite_fresh_target) ... ok
+test_stale_scrape (test_baseline.HealthTests.test_stale_scrape) ... ok
+test_warning_is_unknown (test_baseline.HealthTests.test_warning_is_unknown) ... ok
+test_absent_or_duplicate_is_unknown (test_tdm_listener_contract.ListenerContractTests.test_absent_or_duplicate_is_unknown) ... ok
+test_available_and_observed_failure_are_distinct (test_tdm_listener_contract.ListenerContractTests.test_available_and_observed_failure_are_distinct) ... ok
+test_compose_is_bounded_local_and_fixed_project (test_tdm_listener_contract.ListenerContractTests.test_compose_is_bounded_local_and_fixed_project) ... ok
+test_exporter_query_connection_failure_is_unknown (test_tdm_listener_contract.ListenerContractTests.test_exporter_query_connection_failure_is_unknown) ... ok
+test_incomplete_or_malformed_query_is_unknown (test_tdm_listener_contract.ListenerContractTests.test_incomplete_or_malformed_query_is_unknown) ... ok
+test_invalid_nonfinite_and_nonbinary_values_are_unknown (test_tdm_listener_contract.ListenerContractTests.test_invalid_nonfinite_and_nonbinary_values_are_unknown) ... ok
+test_malformed_value_pairs_are_unknown (test_tdm_listener_contract.ListenerContractTests.test_malformed_value_pairs_are_unknown) ... ok
+test_no_remote_target_or_case_injection (test_tdm_listener_contract.ListenerContractTests.test_no_remote_target_or_case_injection) ... ok
+test_wrong_or_private_labels_are_rejected (test_tdm_listener_contract.ListenerContractTests.test_wrong_or_private_labels_are_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 26 tests in 0.054s
+
+OK

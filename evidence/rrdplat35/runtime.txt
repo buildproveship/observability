@@ -1,0 +1,10 @@
+{"fixture_case": "available", "observed": "available", "source": "synthetic-fixture"}
+{"fixture_case": "denied", "observed": "probe-failed", "source": "synthetic-fixture"}
+{"fixture_case": "redirect", "observed": "probe-failed", "source": "synthetic-fixture"}
+{"fixture_case": "malformed", "observed": "probe-failed", "source": "synthetic-fixture"}
+{"fixture_case": "extra-field", "observed": "probe-failed", "source": "synthetic-fixture"}
+{"fixture_case": "timeout", "observed": "probe-failed", "source": "synthetic-fixture"}
+{"fixture_case": "oversized", "observed": "probe-failed", "source": "synthetic-fixture"}
+fixed labels, metric allowlist, absent-source and simulated stale-time checks passed
+exporter stopped => unknown (not healthy zero)
+query backend stopped => unknown; task containers/networks removed

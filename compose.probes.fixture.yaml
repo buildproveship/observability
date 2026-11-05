@@ -1,0 +1,56 @@
+# Standalone, opt-in synthetic profile. Do not combine with compose.yaml.
+x-fixture-security: &fixture-security
+  profiles: [fixture-only]
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: ['no-new-privileges:true']
+  restart: 'no'
+  stop_grace_period: 2s
+  logging:
+    driver: json-file
+    options:
+      max-size: 2m
+      max-file: '2'
+services:
+  tdm-health-fixture:
+    <<: *fixture-security
+    image: python:3.12.14-slim@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f
+    user: '65534:65534'
+    command: ['python', '-B', '/fixture/tdm_health.py']
+    healthcheck:
+      test: ['CMD', 'python', '-c', "import socket; socket.create_connection(('127.0.0.1', 3102), timeout=1).close()"]
+      interval: 1s
+      timeout: 2s
+      retries: 10
+    environment:
+      FIXTURE_CASE: '${FIXTURE_CASE:-available}'
+    volumes:
+      - ./tests/fixtures/tdm_health.py:/fixture/tdm_health.py:ro
+    networks: [probes-internal]
+  blackbox-fixture:
+    <<: *fixture-security
+    image: prom/blackbox-exporter:v0.29.1@sha256:ea1c7aa3ef3f307cd03e85f34abb604478ccb90b567fc690da0cd9776da76b13
+    command: ['--config.file=/config/tdm-listener.yml', '--web.listen-address=:9115']
+    volumes:
+      - ./probes/tdm-listener.yml:/config/tdm-listener.yml:ro
+    networks: [probes-internal]
+  prometheus-fixture:
+    <<: *fixture-security
+    image: prom/prometheus:v3.10.0@sha256:4a61322ac1103a0e3aea2a61ef1718422a48fa046441f299d71e660a3bc71ae9
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=1h
+      - --storage.tsdb.retention.size=32MB
+      - --query.timeout=3s
+      - --query.max-concurrency=2
+    volumes:
+      - ./probes/prometheus.fixture.yml:/etc/prometheus/prometheus.yml:ro
+    tmpfs: ['/prometheus:uid=65534,gid=65534,mode=0700,size=134217728']
+    ports: ['127.0.0.1:19091:9090']
+    networks: [probes-internal, query-loopback]
+networks:
+  probes-internal:
+    internal: true
+  query-loopback:
+    driver: bridge

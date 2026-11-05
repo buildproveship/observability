@@ -1,0 +1,12 @@
+modules:
+  tdm_listener_fixture_v1:
+    prober: http
+    timeout: 2s
+    http:
+      method: GET
+      valid_status_codes: [200]
+      follow_redirects: false
+      preferred_ip_protocol: ip4
+      ip_protocol_fallback: false
+      body_size_limit: 1KB
+      fail_if_body_json_not_matches_cel: 'size(body) == 1 && body.status == "available"'

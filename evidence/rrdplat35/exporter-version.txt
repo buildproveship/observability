@@ -1,0 +1,6 @@
+blackbox_exporter, version 0.29.1 (branch: HEAD, revision: ad91668339ca265f460c23fc422a27ba6d788db9)
+  build user:       root@ab03ed60a291
+  build date:       20261021-18:03:25
+  go version:       go1.27.3
+  platform:         linux/amd64
+  tags:             unknown
