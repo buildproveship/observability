@@ -40,7 +40,9 @@ def main() -> None:
         baseline.PROJECT.run(*WAIT)
         expect("healthy")
         ports = inspect("rrdplat34-local-prometheus-1")["NetworkSettings"]["Ports"]
-        expected = {"9090/tcp": [{"HostIp": "127.0.0.1", "HostPort": str(baseline.PORT)}]}
+        expected = {
+            "9090/tcp": [{"HostIp": "127.0.0.1", "HostPort": str(baseline.PORT)}]
+        }
         if ports != expected:
             raise AssertionError(ports)
         print(json.dumps({"published_ports": ports}), flush=True)

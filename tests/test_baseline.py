@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import threading
 import time
 import unittest
@@ -22,7 +23,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
 from unittest.mock import patch
 
-from observability import baseline, docker, prometheus
+from observability import baseline, prometheus
 
 NOW = 1800000000
 
@@ -40,7 +41,7 @@ def loopback_server(handler: type[BaseHTTPRequestHandler]) -> Iterator[int]:
 
 
 class Quiet(BaseHTTPRequestHandler):
-    def log_message(self, format: str, *args: Any) -> None:
+    def log_message(self, _format: str, *args: Any) -> None:
         """Keep test output clean."""
 
 
@@ -168,7 +169,9 @@ class LoopbackReadTests(unittest.TestCase):
                 self.wfile.write(body)
 
         with loopback_server(Ok) as port:
-            self.assertEqual(prometheus.fetch(port, "/-/ready"), b"Prometheus Server is Ready.")
+            self.assertEqual(
+                prometheus.fetch(port, "/-/ready"), b"Prometheus Server is Ready."
+            )
 
     def test_redirects_are_not_followed(self) -> None:
         followed: list[str] = []
@@ -228,8 +231,8 @@ class LifecycleTests(unittest.TestCase):
     def test_lifecycle_bounded_and_local(self) -> None:
         remote = {"DOCKER_CONTEXT": "remote", "DOCKER_HOST": "tcp://remote:2376"}
         with (
-            patch.dict(docker.os.environ, remote),
-            patch.object(docker.subprocess, "run") as run,
+            patch.dict(os.environ, remote),
+            patch("observability.docker.subprocess.run") as run,
         ):
             baseline.PROJECT.run("down", "--timeout", "10")
         args, kwargs = run.call_args

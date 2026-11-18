@@ -24,11 +24,25 @@ SELF_SOURCE = {"job": "baseline", "instance": "localhost:9090"}
 READY_BODY = b"Prometheus Server is Ready."
 SAMPLE_PATH = "/api/v1/query?" + urlencode({"query": 'timestamp(up{job="baseline"})'})
 # Every way a read or an unexpected response shape can fail; anything else is a bug.
-OBSERVATION_ERRORS = (OSError, ValueError, KeyError, TypeError, IndexError, AttributeError)
+OBSERVATION_ERRORS = (
+    OSError,
+    ValueError,
+    KeyError,
+    TypeError,
+    IndexError,
+    AttributeError,
+)
 START_WAIT_SECONDS = 45
 PROMTOOL_CHECK = (
-    "run", "--rm", "--no-deps", "--entrypoint", "/bin/promtool", "prometheus",
-    "check", "config", "/etc/prometheus/prometheus.yml",
+    "run",
+    "--rm",
+    "--no-deps",
+    "--entrypoint",
+    "/bin/promtool",
+    "prometheus",
+    "check",
+    "config",
+    "/etc/prometheus/prometheus.yml",
 )
 
 
@@ -63,7 +77,9 @@ def _self_sample_time(sample: Any) -> float:
     return float(value["value"][1])
 
 
-def _assess_scrape(result: dict[str, Any], get: Callable[[str], bytes], now: float) -> None:
+def _assess_scrape(
+    result: dict[str, Any], get: Callable[[str], bytes], now: float
+) -> None:
     target = _self_target(json.loads(get("/api/v1/targets")))
     scraped = datetime.fromisoformat(target["lastScrape"]).timestamp()
     age = _age(now, scraped, "scrape")
@@ -72,17 +88,23 @@ def _assess_scrape(result: dict[str, Any], get: Callable[[str], bytes], now: flo
         result.update(status="stale", reason="last scrape exceeds freshness window")
         return
     if target["health"] != "up":
-        result.update(status="partial", reason="ready backend but self-scrape is not up")
+        result.update(
+            status="partial", reason="ready backend but self-scrape is not up"
+        )
         return
     age = _age(now, _self_sample_time(json.loads(get(SAMPLE_PATH))), "sample")
     result["sample_age_seconds"] = round(age, 3)
     if age > MAX_AGE_SECONDS:
         result.update(status="stale", reason="stored sample exceeds freshness window")
     else:
-        result.update(status="healthy", reason="ready, self-scrape up, query sample fresh")
+        result.update(
+            status="healthy", reason="ready, self-scrape up, query sample fresh"
+        )
 
 
-def assess(get: Callable[[str], bytes] = _get, now: float | None = None) -> dict[str, Any]:
+def assess(
+    get: Callable[[str], bytes] = _get, now: float | None = None
+) -> dict[str, Any]:
     """Return one fresh health observation of the baseline itself (contract v1)."""
     now = time.time() if now is None else now
     result: dict[str, Any] = {
@@ -135,7 +157,8 @@ def main() -> int:
         failure = {
             "status": "unavailable",
             "reason": type(exc).__name__,
-            "detail": "Local Docker operation failed; inspect command output. Data retained.",
+            "detail": "Local Docker operation failed; inspect command output. "
+            "Data retained.",
         }
         print(json.dumps(failure))
         return 1
