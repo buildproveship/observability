@@ -10,7 +10,7 @@ telemetry store, dashboard framework, hosted service or application integration.
 - A Linux local Docker Engine with `/var/run/docker.sock` accessible to your user;
   verified with Engine **29.9.2**, Compose **2.40.3**, Linux x86-64.
 - Python **3.12 or newer** is required (3.12.14 was verified); standard library only,
-  no pip dependencies. Run every command from the repository root.
+  no runtime pip dependencies. Run every command from the repository root.
 - Prometheus **3.10.0**, pinned to the immutable multi-platform image digest
   `sha256:4a61322ac1103a0e3aea2a61ef1718422a48fa046441f299d71e660a3bc71ae9`.
   This is an exact tested pin, not a claim to be the newest release. Version upgrades
@@ -109,6 +109,14 @@ paid service, hosted activation or Mac services were created.
 
 ## Tests and actual evidence
 
+The merge gate is one command. It needs [uv](https://docs.astral.sh/uv/), which
+installs the pinned dev tools from `pyproject.toml`/`uv.lock` (ruff with the shared
+scanner's ruleset, ruff format, mypy strict, vulture) and runs the unit tests:
+
+```sh
+scripts/check.sh
+```
+
 ```sh
 python3 -m unittest discover -s tests -t . -v
 # Opt-in: starts/recreates/stops only rrdplat34-local; preserves data.
@@ -118,12 +126,14 @@ python3 -m tests.runtime
 Unit tests use owned synthetic API responses, **not actual health metrics**. They
 cover stale scrape/sample, absence, bad clocks, NaN, wrong sources, partial query,
 malformed response, connection failure, and bounded local lifecycle execution.
+The loopback reader is tested against a real in-process HTTP server: redirects
+are not followed, oversized bodies are rejected and a slow body hits the deadline.
 The runtime test checks actual healthy → intentionally broken self-scrape →
 healthy recovery → unavailable after stop. Its test-only configuration calls a
 nonexistent path on the same container and sends no external data.
 
-See [recorded verification](evidence/verification.md), [unit output](evidence/unit-tests.txt)
-and [runtime output](evidence/runtime.txt). Static validation and synthetic tests
+See [recorded verification](evidence/rrdplat34/verification.md), [unit output](evidence/rrdplat34/unit-tests.txt)
+and [runtime output](evidence/rrdplat34/runtime.txt). Static validation and synthetic tests
 alone must not be reported as a successful startup.
 
 ## Adjacent backlog boundary
