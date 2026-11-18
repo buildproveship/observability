@@ -1,41 +1,57 @@
-"""Opt-in integration test. Owns only the documented rrdplat34-local project."""
-import importlib.util
+"""Opt-in runtime test. Owns only the documented rrdplat34-local project.
+
+Test classification: e2e
+Review status: Not Reviewed
+Evidence: synthetic
+Scope: starts the real pinned Prometheus through Docker and checks healthy, a
+deliberately broken self-scrape (partial), recovery and unavailable after stop;
+it uses no product, customer or external data.
+"""
+
+from __future__ import annotations
+
 import json
-import subprocess
-from pathlib import Path
 import time
 
-spec = importlib.util.spec_from_file_location('baseline', Path(__file__).resolve().parents[1] / 'scripts/baseline.py')
-baseline = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(baseline)
+from observability import baseline
+from observability.docker import ROOT, ComposeProject, inspect
+
+PARTIAL = ComposeProject(
+    baseline.PROJECT.name,
+    (*baseline.PROJECT.files, ROOT / "tests/partial.compose.yaml"),
+)
+WAIT = ("up", "-d", "--wait", "--wait-timeout", "30")
 
 
-def expect(status):
+def expect(status: str) -> None:
     deadline = time.monotonic() + 45
     while True:
         result = baseline.assess()
-        if result['status'] == status:
-            print(json.dumps({'expected': status, 'actual': result}), flush=True)
+        if result["status"] == status:
+            print(json.dumps({"expected": status, "actual": result}), flush=True)
             return
         if time.monotonic() >= deadline:
             raise AssertionError(result)
         time.sleep(1)
 
 
-try:
-    baseline.compose('up', '-d', '--wait', '--wait-timeout', '30')
-    expect('healthy')
-    config = json.loads(subprocess.check_output([
-        'docker', '--host=unix:///var/run/docker.sock', 'inspect',
-        'rrdplat34-local-prometheus-1'], timeout=10))[0]
-    ports = config['NetworkSettings']['Ports']
-    assert ports == {'9090/tcp': [{'HostIp': '127.0.0.1', 'HostPort': '19090'}]}, ports
-    print(json.dumps({'published_ports': ports}), flush=True)
-    baseline.compose('-f', str(baseline.ROOT / 'tests/partial.compose.yaml'),
-                     'up', '-d', '--force-recreate', '--wait', '--wait-timeout', '30')
-    expect('partial')
-    baseline.compose('up', '-d', '--force-recreate', '--wait', '--wait-timeout', '30')
-    expect('healthy')
-finally:
-    baseline.compose('down', '--timeout', '10')
-expect('unavailable')
+def main() -> None:
+    try:
+        baseline.PROJECT.run(*WAIT)
+        expect("healthy")
+        ports = inspect("rrdplat34-local-prometheus-1")["NetworkSettings"]["Ports"]
+        expected = {"9090/tcp": [{"HostIp": "127.0.0.1", "HostPort": str(baseline.PORT)}]}
+        if ports != expected:
+            raise AssertionError(ports)
+        print(json.dumps({"published_ports": ports}), flush=True)
+        PARTIAL.run(*WAIT, "--force-recreate")
+        expect("partial")
+        baseline.PROJECT.run(*WAIT, "--force-recreate")
+        expect("healthy")
+    finally:
+        baseline.PROJECT.run("down", "--timeout", "10")
+    expect("unavailable")
+
+
+if __name__ == "__main__":
+    main()
