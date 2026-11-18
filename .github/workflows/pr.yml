@@ -1,0 +1,30 @@
+# Light pull request checks. Owner decision of 18 Nov 2026 (docs/decisions.md): ruff (lint and format), mypy strict,
+# vulture and the unit tests run on every pull request via scripts/check.sh. The Docker runtime tests run on demand and
+# nightly (runtime.yml). This replaces the 12 Nov 2026 manual-only Actions decision (RRDPLAT-44) for this light set only.
+name: Pull request
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Only GitHub-owned actions are allowed in this repository, so uv comes from PyPI at a pinned version.
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version-file: .python-version
+      - name: Install uv and the locked dev tools
+        run: |
+          python -m pip install --disable-pip-version-check uv==0.13.6
+          uv sync --locked
+      - name: Lint, format, types, dead code and unit tests
+        run: sh scripts/check.sh
