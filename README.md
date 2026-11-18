@@ -9,7 +9,8 @@ telemetry store, dashboard framework, hosted service or application integration.
 
 - A Linux local Docker Engine with `/var/run/docker.sock` accessible to your user;
   verified with Engine **29.9.2**, Compose **2.40.3**, Linux x86-64.
-- Python **3.12.14** was verified; standard library only, no pip dependencies.
+- Python **3.12 or newer** is required (3.12.14 was verified); standard library only,
+  no pip dependencies. Run every command from the repository root.
 - Prometheus **3.10.0**, pinned to the immutable multi-platform image digest
   `sha256:4a61322ac1103a0e3aea2a61ef1718422a48fa046441f299d71e660a3bc71ae9`.
   This is an exact tested pin, not a claim to be the newest release. Version upgrades
@@ -29,10 +30,10 @@ Run from this repository on your chosen local Linux task environment:
 ```sh
 # The non-root upstream image must be able to read the synthetic configuration.
 chmod 644 prometheus.yml tests/fixtures/partial.yml
-python3 -m unittest discover -s tests -v
-python3 scripts/baseline.py validate
-python3 scripts/baseline.py start
-python3 scripts/baseline.py status
+python3 -m unittest discover -s tests -t . -v
+python3 -m observability.baseline validate
+python3 -m observability.baseline start
+python3 -m observability.baseline status
 ```
 
 `validate` runs Compose validation and upstream `promtool check config` in the
@@ -52,9 +53,9 @@ collection and sample age. No dashboards or UX designs are introduced here.
 docker --host=unix:///var/run/docker.sock compose -p rrdplat34-local ps -a
 docker --host=unix:///var/run/docker.sock compose -p rrdplat34-local logs --tail=50
 # Stop/remove this project's containers and network, retain its data volume.
-python3 scripts/baseline.py stop
+python3 -m observability.baseline stop
 # Expected: unavailable, exit code 1 after shutdown.
-python3 scripts/baseline.py status
+python3 -m observability.baseline status
 ```
 
 The fixed Compose project name `rrdplat34-local` identifies owned task resources.
@@ -109,9 +110,9 @@ paid service, hosted activation or Mac services were created.
 ## Tests and actual evidence
 
 ```sh
-python3 -m unittest discover -s tests -v
+python3 -m unittest discover -s tests -t . -v
 # Opt-in: starts/recreates/stops only rrdplat34-local; preserves data.
-python3 tests/runtime.py
+python3 -m tests.runtime
 ```
 
 Unit tests use owned synthetic API responses, **not actual health metrics**. They
