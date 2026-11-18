@@ -1,4 +1,13 @@
-"""Owned synthetic TDM listener responses. No TDM runtime, keys or private data."""
+"""Owned synthetic TDM listener responses. No TDM runtime, keys or private data.
+
+Test classification: e2e
+Review status: Not Reviewed
+Evidence: synthetic
+Scope: test fixture server mounted alone into the fixture container (standard
+library only, no package imports); it answers the probe with one synthetic case.
+"""
+from __future__ import annotations
+
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import os
 import time
@@ -6,12 +15,12 @@ import time
 CASES = ('available', 'denied', 'redirect', 'malformed', 'extra-field', 'timeout', 'oversized')
 
 
-def handler_for(case):
+def handler_for(case: str) -> type[BaseHTTPRequestHandler]:
     if case not in CASES:
         raise ValueError('Unknown synthetic case')
 
     class Handler(BaseHTTPRequestHandler):
-        def do_GET(self):
+        def do_GET(self) -> None:
             status, body = 200, b'{"status":"available"}'
             if self.path == '/health-ok':
                 # Redirect trap: would incorrectly succeed if redirects were followed.
@@ -41,7 +50,7 @@ def handler_for(case):
             except (BrokenPipeError, ConnectionResetError):
                 pass  # Expected bounded probe cancellation for timeout fixture.
 
-        def log_message(self, fmt, *args):
+        def log_message(self, format: str, *args: object) -> None:
             # Never record request headers, bodies or diagnostics.
             print('synthetic request handled', flush=True)
 

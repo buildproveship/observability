@@ -79,9 +79,9 @@ chmod 644 probes/*.yml tests/fixtures/tdm_health.py
 # Initial dependency pull is explicitly bounded; no builds or package installation.
 timeout 180 docker --host=unix:///var/run/docker.sock compose \
   -p rrdplat35-fixture -f compose.probes.fixture.yaml --profile fixture-only pull
-python3 -m unittest discover -s tests -v
-python3 tests/tdm_probe_runtime.py validate
-python3 tests/tdm_probe_runtime.py test
+python3 -m unittest discover -s tests -t . -v
+python3 -m tests.tdm_probe_runtime validate
+python3 -m tests.tdm_probe_runtime test
 ```
 
 `validate` checks that the profile defaults off, runs upstream `promtool check
@@ -95,9 +95,9 @@ with the fixture container; preserve desired output before teardown.
 For manual inspection only:
 
 ```sh
-python3 tests/tdm_probe_runtime.py start
-python3 tests/tdm_probe_runtime.py status
-python3 tests/tdm_probe_runtime.py stop
+python3 -m tests.tdm_probe_runtime start
+python3 -m tests.tdm_probe_runtime status
+python3 -m tests.tdm_probe_runtime stop
 ```
 
 Status exits zero only for fixture `available`; observed failure/unknown returns
