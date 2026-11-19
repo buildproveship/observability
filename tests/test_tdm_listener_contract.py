@@ -96,7 +96,7 @@ class ListenerContractTests(unittest.TestCase):
             probe.compose("down", "--timeout", "5")
             args, kwargs = run.call_args
             self.assertIn("--host=unix:///var/run/docker.sock", args[0])
-            self.assertIn("rrdplat35-fixture", args[0])
+            self.assertIn("rr-observability-probes", args[0])
             self.assertIn("fixture-only", args[0])
             self.assertNotIn("DOCKER_CONTEXT", kwargs["env"])
             self.assertNotIn("COMPOSE_PROFILES", kwargs["env"])

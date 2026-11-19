@@ -78,7 +78,7 @@ From repository root:
 chmod 644 probes/*.yml tests/fixtures/tdm_health.py
 # Initial dependency pull is explicitly bounded; no builds or package installation.
 timeout 180 docker --host=unix:///var/run/docker.sock compose \
-  -p rrdplat35-fixture -f compose.probes.fixture.yaml --profile fixture-only pull
+  -p rr-observability-probes -f compose.probes.fixture.yaml --profile fixture-only pull
 python3 -m unittest discover -s tests -t . -v
 python3 -m tests.tdm_probe_runtime validate
 python3 -m tests.tdm_probe_runtime test
@@ -110,7 +110,7 @@ verification, not a multi-tenant authorization guarantee.
 Use this Compose file standalone, not merged with the baseline `compose.yaml`.
 All three services have the explicit `fixture-only` profile. Ordinary baseline
 startup does not start them. Do not concurrently use the same fixed project name
-`rrdplat35-fixture` from multiple checkouts. Each Compose invocation has a 60-second
+`rr-observability-probes` from multiple checkouts. Each Compose invocation has a 60-second
 subprocess deadline; readiness/observation polls have 25-second windows; local query
 HTTP exchanges have two-second hard deadlines. A timed-out daemon command may still
 finish: inspect this project's resources before retrying. If an image is missing,
