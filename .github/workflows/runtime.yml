@@ -11,7 +11,6 @@ permissions:
 concurrency:
   group: runtime-${{ github.ref }}
   cancel-in-progress: true
-# Hosted ubuntu on purpose: needs Docker Compose, which the self-hosted Mac runner does not provide. Nightly/manual only.
 jobs:
   runtime:
     runs-on: [self-hosted, rr-local]
@@ -37,9 +36,14 @@ jobs:
           echo "/usr/local/bin" >> "$GITHUB_PATH"
           # colima has no /var/run/docker.sock; the tests pin the local daemon, so point them at colima's socket.
           echo "OBSERVABILITY_DOCKER_SOCKET=$HOME/.colima/default/docker.sock" >> "$GITHUB_ENV"
+      - name: Remove leftovers from earlier runs
+        run: sh scripts/clean-docker.sh
       - name: Prometheus baseline runtime test
         run: uv run python -m tests.runtime
       - name: TDM listener probe fixture
         run: |
           uv run python -m tests.tdm_probe_runtime validate
           uv run python -m tests.tdm_probe_runtime test
+      - name: Tear down containers, networks and volumes
+        if: always()
+        run: sh scripts/clean-docker.sh
