@@ -13,6 +13,8 @@ dev = ["ruff==0.17.4", "mypy==2.4.1", "vulture==2.16", "pip-audit==2.9.0"]
 
 [tool.uv]
 package = false
+# Dependency cooldown (semgrep uv-missing-dependency-cooldown): resolve only versions published 7+ days ago.
+exclude-newer = "7 days"
 
 [tool.ruff]
 target-version = "py312"
