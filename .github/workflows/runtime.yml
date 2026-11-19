@@ -10,6 +10,7 @@ permissions:
 concurrency:
   group: runtime-${{ github.ref }}
   cancel-in-progress: true
+# Hosted ubuntu on purpose: needs Docker Compose, which the self-hosted Mac runner does not provide. Nightly/manual only.
 jobs:
   runtime:
     runs-on: ubuntu-24.04

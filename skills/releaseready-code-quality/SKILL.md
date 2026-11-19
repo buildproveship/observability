@@ -1,6 +1,6 @@
 ---
 name: releaseready-code-quality
-description: Code-quality rules for every change in any releaseready repo (ReleaseReady, frontend-ui, releaseready-product-tests, test-management, test-data-management, universal-playwright-framework, universal-api-framework, universal-appium2-framework, observability, config). Use before writing or editing code, tests, configs, dependencies or READMEs in these repos, and before saying such work is done. Encodes the 191 defects found in the 18 Nov 2026 cross-repo review so AI-assisted coding does not bring them back.
+description: Code-quality rules for every change in any releaseready repo (ReleaseReady, frontend-ui, releaseready-product-tests, test-management, test-data-management, universal-playwright-framework, universal-api-framework, universal-appium-framework, observability, config). Use before writing or editing code, tests, configs, dependencies or READMEs in these repos, and before saying such work is done. Encodes the 191 defects found in the 18 Nov 2026 cross-repo review so AI-assisted coding does not bring them back.
 ---
 
 # ReleaseReady code quality
@@ -59,7 +59,7 @@ repo's `pr.yml`; the rest is on you.
    no secrets in code or logs, dependencies current and audited. _(TDM-01, UPF-11, UPF-21, RPT-09, OBS-02, OBS-03,
    OBS-09, RR-20, TM-24, FUI-08, UPF-19, UPF-22, UAF-15, UAF-18, UA2-16, UA2-17, OBS-16)_
 7. **Keep it maintainable and checked on every PR.** One check command runs everything light; `pr.yml` runs it on
-   every pull request. **Merge only when `pr.yml` is green** (squash). On config and universal-appium2-framework
+   every pull request. **Merge only when `pr.yml` is green** (squash). On config and universal-appium-framework
    GitHub branch protection enforces it; the other repos are private on the free plan, where a local Claude Code
    hook blocks `gh pr merge` until every check on the PR is green. Never bypass either. Build output is cleaned before tests run. Delete unused
    files, exports, dependencies and parameters (knip, vulture). Split files over ~1,000 lines. Every test file has

@@ -1,7 +1,7 @@
 # What CI checks, and how to adopt it
 
 `releaseready-guardrails` and the shared ESLint config ship in `@releaseready/config` (one source for every repo).
-Every repo runs them in `pr.yml`. Merge only when `pr.yml` is green. config and universal-appium2-framework enforce
+Every repo runs them in `pr.yml`. Merge only when `pr.yml` is green. config and universal-appium-framework enforce
 this with GitHub branch protection (required check `checks`, up to date with `main`, no force pushes, admins
 included). The other eight repos are private on GitHub's free plan, which has no branch protection, so there a local
 Claude Code hook on the owner's machine blocks `gh pr merge` until every check on the PR is green.
