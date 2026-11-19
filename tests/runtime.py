@@ -39,7 +39,9 @@ def main() -> None:
     try:
         baseline.PROJECT.run(*WAIT)
         expect("healthy")
-        ports = inspect("rr-observability-baseline-prometheus-1")["NetworkSettings"]["Ports"]
+        ports = inspect("rr-observability-baseline-prometheus-1")["NetworkSettings"][
+            "Ports"
+        ]
         expected = {
             "9090/tcp": [{"HostIp": "127.0.0.1", "HostPort": str(baseline.PORT)}]
         }
