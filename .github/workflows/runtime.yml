@@ -1,5 +1,6 @@
 # Docker runtime tests. Owner decision of 18 Nov 2026 (docs/decisions.md): the tests that start the pinned Prometheus
 # and the synthetic TDM listener fixture through Docker Compose run on demand and nightly, not on every pull request.
+# Runs on the org self-hosted macOS arm64 runner (hosted minutes are exhausted); colima provides the Linux Docker engine.
 name: Runtime tests
 on:
   workflow_dispatch:
@@ -13,20 +14,29 @@ concurrency:
 # Hosted ubuntu on purpose: needs Docker Compose, which the self-hosted Mac runner does not provide. Nightly/manual only.
 jobs:
   runtime:
-    runs-on: ubuntu-24.04
+    runs-on: [self-hosted, rr-local]
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      # Only GitHub-owned actions are allowed in this repository, so uv comes from PyPI at a pinned version.
-      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
-        with:
-          python-version-file: .python-version
+      # No setup-python: its macOS install script writes to /Users/runner, which the self-hosted runner cannot create.
+      # uv comes from PyPI at a pinned version (only GitHub-owned actions are allowed) and installs the Python in .python-version itself.
       - name: Install uv and the locked dev tools
         run: |
-          python -m pip install --disable-pip-version-check uv==0.13.6
-          uv sync --locked
+          rm -rf "$RUNNER_TEMP/uv-venv" # the runner keeps _temp between jobs; a stale venv can be corrupt
+          python3 -m venv "$RUNNER_TEMP/uv-venv"
+          "$RUNNER_TEMP/uv-venv/bin/python" -m pip install --disable-pip-version-check uv==0.13.6
+          echo "$RUNNER_TEMP/uv-venv/bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/uv-venv/bin/uv" sync --locked
+      - name: Start the Linux Docker engine (colima)
+        run: |
+          export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+          colima status || colima start --cpu 2 --memory 4
+          echo "/opt/homebrew/bin" >> "$GITHUB_PATH"
+          echo "/usr/local/bin" >> "$GITHUB_PATH"
+          # colima has no /var/run/docker.sock; the tests pin the local daemon, so point them at colima's socket.
+          echo "OBSERVABILITY_DOCKER_SOCKET=$HOME/.colima/default/docker.sock" >> "$GITHUB_ENV"
       - name: Prometheus baseline runtime test
         run: uv run python -m tests.runtime
       - name: TDM listener probe fixture
