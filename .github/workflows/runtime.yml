@@ -24,6 +24,7 @@ jobs:
       # uv comes from PyPI at a pinned version (only GitHub-owned actions are allowed) and installs the Python in .python-version itself.
       - name: Install uv and the locked dev tools
         run: |
+          rm -rf "$RUNNER_TEMP/uv-venv" # the runner keeps _temp between jobs; a stale venv can be corrupt
           python3 -m venv "$RUNNER_TEMP/uv-venv"
           "$RUNNER_TEMP/uv-venv/bin/python" -m pip install --disable-pip-version-check uv==0.13.6
           echo "$RUNNER_TEMP/uv-venv/bin" >> "$GITHUB_PATH"
