@@ -1,4 +1,4 @@
-"""Opt-in runtime test. Owns only the documented rrdplat34-local project.
+"""Opt-in runtime test. Owns only the documented rr-observability-baseline project.
 
 Test classification: e2e
 Review status: Not Reviewed
@@ -39,7 +39,7 @@ def main() -> None:
     try:
         baseline.PROJECT.run(*WAIT)
         expect("healthy")
-        ports = inspect("rrdplat34-local-prometheus-1")["NetworkSettings"]["Ports"]
+        ports = inspect("rr-observability-baseline-prometheus-1")["NetworkSettings"]["Ports"]
         expected = {
             "9090/tcp": [{"HostIp": "127.0.0.1", "HostPort": str(baseline.PORT)}]
         }

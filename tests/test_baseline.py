@@ -237,7 +237,7 @@ class LifecycleTests(unittest.TestCase):
             baseline.PROJECT.run("down", "--timeout", "10")
         args, kwargs = run.call_args
         self.assertIn("--host=unix:///var/run/docker.sock", args[0])
-        self.assertIn("rrdplat34-local", args[0])
+        self.assertIn("rr-observability-baseline", args[0])
         self.assertNotIn("--volumes", args[0])
         self.assertNotIn("DOCKER_CONTEXT", kwargs["env"])
         self.assertNotIn("DOCKER_HOST", kwargs["env"])

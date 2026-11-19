@@ -50,18 +50,18 @@ collection and sample age. No dashboards or UX designs are introduced here.
 
 ```sh
 # Inspect only this baseline's resources.
-docker --host=unix:///var/run/docker.sock compose -p rrdplat34-local ps -a
-docker --host=unix:///var/run/docker.sock compose -p rrdplat34-local logs --tail=50
+docker --host=unix:///var/run/docker.sock compose -p rr-observability-baseline ps -a
+docker --host=unix:///var/run/docker.sock compose -p rr-observability-baseline logs --tail=50
 # Stop/remove this project's containers and network, retain its data volume.
 python3 -m observability.baseline stop
 # Expected: unavailable, exit code 1 after shutdown.
 python3 -m observability.baseline status
 ```
 
-The fixed Compose project name `rrdplat34-local` identifies owned task resources.
+The fixed Compose project name `rr-observability-baseline` identifies owned task resources.
 Do not share that project name between checkouts or run the lifecycle/integration
 commands concurrently. Stop does **not** remove volumes, evidence or unrelated
-resources. Data remains in `rrdplat34-local_prometheus-data`. There is deliberately
+resources. Data remains in `rr-observability-baseline_prometheus-data`. There is deliberately
 no automatic purge command. Retention is 24 hours / 256 MB of TSDB blocks;
 WAL, head and temporary files can exceed the block limit. Logs rotate at 2 × 5 MB.
 
@@ -119,7 +119,7 @@ scripts/check.sh
 
 ```sh
 python3 -m unittest discover -s tests -t . -v
-# Opt-in: starts/recreates/stops only rrdplat34-local; preserves data.
+# Opt-in: starts/recreates/stops only rr-observability-baseline; preserves data.
 python3 -m tests.runtime
 ```
 

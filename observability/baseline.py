@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from collections.abc import Callable
 
 PORT = 19090
-PROJECT = ComposeProject("rrdplat34-local", (ROOT / "compose.yaml",))
+PROJECT = ComposeProject("rr-observability-baseline", (ROOT / "compose.yaml",))
 SELF_SOURCE = {"job": "baseline", "instance": "localhost:9090"}
 READY_BODY = b"Prometheus Server is Ready."
 SAMPLE_PATH = "/api/v1/query?" + urlencode({"query": 'timestamp(up{job="baseline"})'})

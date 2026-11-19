@@ -56,7 +56,7 @@ def compose(
     if case not in CASES:
         raise ValueError("Unknown synthetic case")
     project = ComposeProject(
-        "rrdplat35-fixture",
+        "rr-observability-probes",
         FILES,
         ("fixture-only",) if profile else (),
         {"FIXTURE_CASE": case},
@@ -159,7 +159,7 @@ def _check_isolation() -> None:
         _require("@sha256:" in service["image"], name)
         if name != "prometheus-fixture":
             _require(not service.get("ports"), name)
-    ports = inspect("rrdplat35-fixture-prometheus-fixture-1")["NetworkSettings"][
+    ports = inspect("rr-observability-probes-prometheus-fixture-1")["NetworkSettings"][
         "Ports"
     ]
     expected = {"9090/tcp": [{"HostIp": "127.0.0.1", "HostPort": str(PORT)}]}
