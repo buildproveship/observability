@@ -7,6 +7,7 @@ on:
     branches: [main]
 permissions:
   contents: read
+  packages: read
 concurrency:
   group: pr-${{ github.event.pull_request.number }}
   cancel-in-progress: true
@@ -28,3 +29,12 @@ jobs:
           uv sync --locked
       - name: Lint, format, types, dead code and unit tests
         run: sh scripts/check.sh
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          registry-url: https://npm.pkg.github.com
+          scope: "@releaseready"
+      - name: Guardrails (static rules and jscpd)
+        run: npx --yes --package @releaseready/config@^2.0.1 releaseready-guardrails
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

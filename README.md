@@ -1,4 +1,4 @@
-# Local OSS observability baseline — RRDPLAT-34
+# Local OSS observability baseline
 
 A small, standalone Prometheus baseline, independent of ReleaseReady, its database,
 and application runtimes. It collects **only Prometheus's own operational metrics**.

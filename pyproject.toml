@@ -9,7 +9,7 @@ dependencies = []
 
 [dependency-groups]
 # Pinned to the versions the shared code-quality scanner uses.
-dev = ["ruff==0.17.4", "mypy==2.4.1", "vulture==2.16"]
+dev = ["ruff==0.17.4", "mypy==2.4.1", "vulture==2.16", "pip-audit==2.9.0"]
 
 [tool.uv]
 package = false
@@ -21,7 +21,7 @@ line-length = 88
 
 [tool.ruff.lint]
 # The shared scanner's ruleset (code-quality ruff-adapter.ts) is the floor.
-select = ["E", "F", "W", "I", "B", "UP", "S", "C4", "SIM", "PL", "RUF"]
+select = ["E", "F", "W", "I", "B", "UP", "S", "C4", "SIM", "PL", "RUF", "PGH", "BLE"]
 
 [tool.mypy]
 strict = true
