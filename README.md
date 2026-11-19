@@ -11,8 +11,8 @@ telemetry store, dashboard framework, hosted service or application integration.
   verified with Engine **29.9.2**, Compose **2.40.3**, Linux x86-64.
 - Python **3.12 or newer** is required (3.12.14 was verified); standard library only,
   no runtime pip dependencies. Run every command from the repository root.
-- Prometheus **3.10.0**, pinned to the immutable multi-platform image digest
-  `sha256:4a61322ac1103a0e3aea2a61ef1718422a48fa046441f299d71e660a3bc71ae9`.
+- Prometheus **3.16.0**, pinned to the immutable multi-platform image digest
+  `sha256:e04987641b57704f408e31f6373ba4138ecf27cb4a165d24aabb6c38fddd0f06`.
   This is an exact tested pin, not a claim to be the newest release. Version upgrades
   require repeating validation and failure tests with a new reviewed digest.
 - Access to Docker Hub for the initial image pull and free loopback port **19090**.
@@ -147,4 +147,4 @@ no central, frontend or cloud-platform files are changed.
 Upstream references: [Docker installation](https://prometheus.io/docs/prometheus/latest/installation/),
 [configuration](https://prometheus.io/docs/prometheus/latest/configuration/configuration/),
 [storage limits](https://prometheus.io/docs/prometheus/latest/storage/),
-[3.10.0 release](https://github.com/prometheus/prometheus/releases/tag/v3.10.0).
+[3.16.0 release](https://github.com/prometheus/prometheus/releases/tag/v3.16.0).

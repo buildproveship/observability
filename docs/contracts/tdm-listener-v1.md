@@ -69,7 +69,7 @@ Verified versions: Docker 29.9.2, Compose 2.40.3, Python 3.12.14. Dependencies:
 | Component | Version | Immutable image digest |
 | --- | --- | --- |
 | blackbox exporter | 0.29.1 | `sha256:ea1c7aa3ef3f307cd03e85f34abb604478ccb90b567fc690da0cd9776da76b13` |
-| Prometheus | 3.10.0 (baseline pin) | `sha256:4a61322ac1103a0e3aea2a61ef1718422a48fa046441f299d71e660a3bc71ae9` |
+| Prometheus | 3.16.0 (baseline pin) | `sha256:e04987641b57704f408e31f6373ba4138ecf27cb4a165d24aabb6c38fddd0f06` |
 | Python synthetic fixture | 3.12.14-slim | `sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f` |
 
 From repository root:
