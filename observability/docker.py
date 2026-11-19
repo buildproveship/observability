@@ -14,7 +14,10 @@ if TYPE_CHECKING:
     from collections.abc import Mapping
 
 ROOT = Path(__file__).resolve().parents[1]
-LOCAL_DAEMON = "--host=unix:///var/run/docker.sock"
+# OBSERVABILITY_DOCKER_SOCKET overrides the default local socket for hosts whose
+# Docker VM (colima) has no /var/run/docker.sock. It is a local path, not a remote one.
+_SOCKET = os.environ.get("OBSERVABILITY_DOCKER_SOCKET", "/var/run/docker.sock")
+LOCAL_DAEMON = f"--host=unix://{_SOCKET}"
 # Inherited selectors that could point Docker at a remote daemon or other profiles.
 _INHERITED_SELECTORS = frozenset(
     {
