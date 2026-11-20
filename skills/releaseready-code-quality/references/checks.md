@@ -31,6 +31,8 @@ vulture and pip-audit.
 | `copied-canonical-digest`        | a local `canonical()`, `canonicalJson`, `stableStringify` …                                                      | TM-06, TDM-21                 |
 | `copied-jwt-verifier`            | `jwtVerify`, `createRemoteJWKSet`, `jsonwebtoken`, `jwks-rsa`, PyJWT                                             | TM-18, TDM-06                 |
 | `copied-wcag-contrast`           | the sRGB luminance coefficients or linearisation constants                                                       | RPT-11                        |
+| `runtime-assert`                 | a Python `assert` statement outside test files (removed by `python -O`; use `if not …: raise`)                   | SonarCloud, 20 Nov 2026       |
+| `hardcoded-tmp`                  | a literal `"/tmp"` string in non-test source (publicly writable; use `mkdtemp`)                                  | SonarCloud, 20 Nov 2026       |
 | `legacy-marker`                  | `@deprecated`, `legacy`, backwards-compat, compat layer/shim/alias, `shim`, `TODO remove`                        | RR-03, RR-04, TM-11, UPF-01   |
 | `skipped-test`                   | `.skip(`, `.todo(`, `xit(`, `{ skip: true }` in test files                                                       | standard 2                    |
 | `eslint-rule-off-without-reason` | a rule set to `off`/`warn`/`0` in eslint.config without a comment on it or above its group                       | UPF-03, UA2-06                |
