@@ -148,3 +148,7 @@ Upstream references: [Docker installation](https://prometheus.io/docs/prometheus
 [configuration](https://prometheus.io/docs/prometheus/latest/configuration/configuration/),
 [storage limits](https://prometheus.io/docs/prometheus/latest/storage/),
 [3.16.0 release](https://github.com/prometheus/prometheus/releases/tag/v3.16.0).
+
+## Licence
+
+Apache-2.0. See [LICENSE](LICENSE).
