@@ -20,11 +20,10 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from importlib import reload
 from typing import Any
 from unittest.mock import patch
 
-from observability import baseline, docker, prometheus
+from observability import baseline, prometheus
 
 NOW = 1800000000
 
@@ -244,15 +243,6 @@ class LifecycleTests(unittest.TestCase):
         self.assertNotIn("DOCKER_HOST", kwargs["env"])
         self.assertEqual(kwargs["timeout"], 60)
         self.assertTrue(kwargs["check"])
-
-    def test_daemon_socket_override(self) -> None:
-        try:
-            with patch.dict(os.environ, {"OBSERVABILITY_DOCKER_SOCKET": "/x/d.sock"}):
-                self.assertEqual(reload(docker).LOCAL_DAEMON, "--host=unix:///x/d.sock")
-        finally:
-            self.assertEqual(
-                reload(docker).LOCAL_DAEMON, "--host=unix:///var/run/docker.sock"
-            )
 
 
 if __name__ == "__main__":

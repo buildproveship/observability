@@ -123,7 +123,7 @@ repo's `pr.yml`; the rest is on you.
 tsconfig `paths` into `dist/` or `node_modules`; `strict` turned off; scripts that build in `node_modules`;
 re-declared schema-primitive regexes, hand-written WCAG luminance, local `canonical()` digests, local JWT
 verification; `@deprecated`/legacy/compatibility markers; skipped tests; ESLint rules turned off without a comment;
-dated or ticket headings in READMEs; this skill drifting from the published copy; knip findings; jscpd duplication
+dated or ticket headings in READMEs; a tracked `.DS_Store`; this skill drifting from the published copy; knip findings; jscpd duplication
 over the repo's threshold. The shared ESLint config fails on disable comments without `-- reason`, `@ts-ignore`,
 `@ts-expect-error` without a description, and focused (`.only`) tests. Details and the allowlist format:
 [references/checks.md](references/checks.md).

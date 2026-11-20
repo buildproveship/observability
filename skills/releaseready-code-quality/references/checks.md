@@ -34,6 +34,7 @@ vulture and pip-audit.
 | `legacy-marker`                  | `@deprecated`, `legacy`, backwards-compat, compat layer/shim/alias, `shim`, `TODO remove`                        | RR-03, RR-04, TM-11, UPF-01   |
 | `skipped-test`                   | `.skip(`, `.todo(`, `xit(`, `{ skip: true }` in test files                                                       | standard 2                    |
 | `eslint-rule-off-without-reason` | a rule set to `off`/`warn`/`0` in eslint.config without a comment on it or above its group                       | UPF-03, UA2-06                |
+| `tracked-ds-store`               | a `.DS_Store` in the git index (`git ls-files`), at any depth; untracked or ignored ones pass                    | standard 7                    |
 | `readme-dated-history`           | README headings with a date or a ticket key; "Status as of <date>" lines                                         | TDM-20, RPT-17, OBS-17        |
 | `skill-drift`                    | this skill differs from the published copy; AGENTS.md/CLAUDE.md missing or not pointing here                     | UA2-21                        |
 | `unused-allow`                   | an allowlist entry that matches nothing, or whose `max` is higher than today's count                             | —                             |
