@@ -1,7 +1,7 @@
 # Light pull request checks. Owner decision of 18 Nov 2026 (docs/decisions.md): ruff (lint and format), mypy strict,
 # vulture and the unit tests run on every pull request via scripts/check.sh. The Docker runtime tests run on demand and
-# nightly (runtime.yml). Jobs run on the org self-hosted macOS arm64 runner (labels self-hosted, rr-local, 19 Nov 2026) because
-# hosted minutes are exhausted. This replaces the 12 Nov 2026 manual-only Actions decision (RRDPLAT-44) for this light set only.
+# nightly (runtime.yml). Jobs run on GitHub-hosted ubuntu-24.04 (owner decision of 20 Nov 2026); the self-hosted Mac runner
+# only serves macOS-only nightly tests in ReleaseReady. This replaces the 12 Nov 2026 manual-only Actions decision (RRDPLAT-44).
 name: Pull request
 on:
   pull_request:
@@ -16,17 +16,16 @@ concurrency:
 jobs:
   checks:
     if: github.event.pull_request.draft == false
-    runs-on: [self-hosted, rr-local]
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      # No setup-python: its macOS install script writes to /Users/runner, which the self-hosted runner cannot create.
+      # No setup-python: uv installs the Python in .python-version itself.
       # uv comes from PyPI at a pinned version (only GitHub-owned actions are allowed) and installs the Python in .python-version itself.
       - name: Install uv and the locked dev tools
         run: |
-          rm -rf "$RUNNER_TEMP/uv-venv" # the runner keeps _temp between jobs; a stale venv can be corrupt
           python3 -m venv "$RUNNER_TEMP/uv-venv"
           "$RUNNER_TEMP/uv-venv/bin/python" -m pip install --disable-pip-version-check uv==0.13.6
           echo "$RUNNER_TEMP/uv-venv/bin" >> "$GITHUB_PATH"
@@ -44,7 +43,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   security:
     if: github.event.pull_request.draft == false
-    runs-on: [self-hosted, rr-local]
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
