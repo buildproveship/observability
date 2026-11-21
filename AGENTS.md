@@ -38,3 +38,26 @@ helper; import shared code from `@releaseready/test-management`, TDM `dev-fixtur
 a lint rule, test or guard to go green, and give every disable comment a reason; READMEs describe today's code.
 The check command is `sh scripts/check.sh` (ruff incl. PGH and BLE, mypy strict, vulture, pip-audit, unit tests);
 `pr.yml` runs it and `releaseready-guardrails` on every PR.
+
+## Defects we don't create
+
+The rules come from the defects found in the 18 Nov 2026 cross-repo review. The full list and fixes are in the
+`releaseready-code-quality` skill: https://github.com/releaseready/config/tree/main/skill/releaseready-code-quality
+
+<!-- TODO(RRDSCRUM-438): replace this link with the docs page once it exists. -->
+
+- No legacy or compatibility code without a named consumer.
+- Search PyPI, the standard library or the CLI before writing a helper.
+- Import shared code; never copy it between repos.
+- Depend on published, pinned versions only.
+- Never weaken a lint rule, test or guard to go green; give every disable comment a reason.
+- Allow-list a guardrail finding only after review, and with a `reason`.
+- Every fix adds the cheapest guard that fails the whole class next time.
+- READMEs and docs describe today's code, not plans.
+- Never commit secrets, credentials or real customer data; use synthetic data.
+
+## Merging
+
+- Never merge with a red or missing `pr.yml`.
+- The owner's local `merge-guard.sh` is the merge gate.
+- `main` is protected by the required `checks` job.
