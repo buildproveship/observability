@@ -61,3 +61,10 @@ The rules come from the defects found in the 18 Nov 2026 cross-repo review. The 
 - Never merge with a red or missing `pr.yml`.
 - The owner's local `merge-guard.sh` is the merge gate.
 - `main` is protected by the required `checks` job.
+
+## Delivery rules
+
+- Rules for people and agents: [How we work](https://noisegatemusicstudios.atlassian.net/wiki/spaces/RRDOCS/pages/27328513) and [Reuse first](https://noisegatemusicstudios.atlassian.net/wiki/spaces/RRDOCS/pages/27230233).
+- Read only the ticket's **Agent brief** first ([template](https://noisegatemusicstudios.atlassian.net/wiki/spaces/RRDOCS/pages/26411190): Goal, Files, Done when, Blocked by/Reuses, Model); history and background are in the comments.
+- Before you create a ticket, a branch or a helper, search Jira and the Reuse first list, then extend or link what exists.
+- Fetch and rebase on `origin/main` before every push, open draft pull requests, and run the checks locally before CI.
