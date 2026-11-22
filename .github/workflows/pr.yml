@@ -2,12 +2,14 @@
 # vulture and the unit tests run on every pull request via scripts/check.sh. The Docker runtime tests run on demand and
 # nightly (runtime.yml). Jobs run on GitHub-hosted ubuntu-24.04 (owner decision of 20 Nov 2026); the self-hosted Mac runner
 # only serves macOS-only nightly tests in ReleaseReady. This replaces the 12 Nov 2026 manual-only Actions decision (RRDPLAT-44).
+# No path filter on the trigger (RRDPLAT-103): a required check that never starts stays pending, so docs-only pull requests
+# are recognised inside the workflow by the `changes` job, and the required `checks` job still reports success. Same
+# logic as the reusable CI workflow in releaseready/config (reusable-ci.yml); that workflow runs npm, so it cannot be called here.
 name: Pull request
 on:
   pull_request:
     branches: [main]
     types: [opened, synchronize, reopened, ready_for_review]
-    paths-ignore: ["**/*.md", "docs/**"]
 permissions:
   contents: read
   packages: read
@@ -15,40 +17,70 @@ concurrency:
   group: pr-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 jobs:
+  changes:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      pull-requests: read
+    outputs:
+      docs_only: ${{ steps.diff.outputs.docs_only }}
+    steps:
+      - id: diff
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          # A rename lists both ends: moving a source file into docs/ removes a source file.
+          files=$(gh api "repos/$REPO/pulls/$PR/files" --paginate --jq '.[] | .filename, (.previous_filename // empty)')
+          source_files=$(printf '%s\n' "$files" | grep -Ev '^(.*\.md|docs/.*|LICENSE)$' || true)
+          docs_only=false
+          if [ -n "$files" ] && [ -z "$source_files" ]; then docs_only=true; fi
+          echo "docs_only=$docs_only" >> "$GITHUB_OUTPUT"
   checks:
+    needs: changes
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: needs.changes.outputs.docs_only != 'true'
         with:
           persist-credentials: false
       # No setup-python: uv installs the Python in .python-version itself.
       # uv comes from PyPI at a pinned version (only GitHub-owned actions are allowed) and installs the Python in .python-version itself.
       - name: Cache uv downloads
+        if: needs.changes.outputs.docs_only != 'true'
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/uv
           key: uv-${{ runner.os }}-${{ hashFiles('uv.lock', '.python-version') }}
       - name: Install uv and the locked dev tools
+        if: needs.changes.outputs.docs_only != 'true'
         run: |
           python3 -m venv "$RUNNER_TEMP/uv-venv"
           "$RUNNER_TEMP/uv-venv/bin/python" -m pip install --disable-pip-version-check uv==0.13.6
           echo "$RUNNER_TEMP/uv-venv/bin" >> "$GITHUB_PATH"
           "$RUNNER_TEMP/uv-venv/bin/uv" sync --locked
       - name: Lint, format, types, dead code and unit tests
+        if: needs.changes.outputs.docs_only != 'true'
         run: sh scripts/check.sh
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        if: needs.changes.outputs.docs_only != 'true'
         with:
           node-version: 24
           registry-url: https://npm.pkg.github.com
           scope: "@releaseready"
       - name: Guardrails (static rules and jscpd)
+        if: needs.changes.outputs.docs_only != 'true'
         run: npx --yes --package @releaseready/config@^3.0.0 releaseready-guardrails
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   security:
-    if: github.event.pull_request.draft == false
+    needs: changes
+    if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.docs_only != 'true' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
