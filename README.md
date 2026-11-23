@@ -1,6 +1,6 @@
 # Local OSS observability baseline
 
-A small, standalone Prometheus baseline, independent of ReleaseReady, its database,
+A small, standalone Prometheus baseline, independent of BuildProveShip, its database,
 and application runtimes. It collects **only Prometheus's own operational metrics**.
 Prometheus supplies storage, PromQL and its built-in query UI. There is no custom
 telemetry store, dashboard framework, hosted service or application integration.
@@ -73,13 +73,13 @@ other results return **1**. The fields include observation time, scope, reason,
 reuses a previous successful observation. It checks `/-/ready`, `/api/v1/targets`, and a PromQL `timestamp(up{job="baseline"})` query.
 The PromQL sample timestamp is used rather than the instant-query evaluation time.
 
-| Status | Meaning |
-| --- | --- |
-| healthy | Backend ready, exactly the expected self-target up, scrape and stored sample no older than 45 seconds |
-| unavailable | Readiness connection, timeout, HTTP or response validation failed |
-| partial | Backend ready and target freshly checked, but self-scrape not up |
-| stale | Scrape or stored sample exceeds the freshness window, even if a historical check said up |
-| unknown | Missing/extra target or sample, malformed/incomplete query, warning, unexpected source, invalid or future clock |
+| Status      | Meaning                                                                                                         |
+| ----------- | --------------------------------------------------------------------------------------------------------------- |
+| healthy     | Backend ready, exactly the expected self-target up, scrape and stored sample no older than 45 seconds           |
+| unavailable | Readiness connection, timeout, HTTP or response validation failed                                               |
+| partial     | Backend ready and target freshly checked, but self-scrape not up                                                |
+| stale       | Scrape or stored sample exceeds the freshness window, even if a historical check said up                        |
+| unknown     | Missing/extra target or sample, malformed/incomplete query, warning, unexpected source, invalid or future clock |
 
 This is a point-in-time check of the **baseline itself**, not health of any product,
 customer, run outcome, restoration correctness or business process. The 45-second
