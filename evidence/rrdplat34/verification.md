@@ -1,7 +1,7 @@
 # RRDPLAT-34 local verification — 2026-11-05 UTC
 
 Executed in the selected ephemeral cloud task, Linux x86-64, Docker Engine 29.9.2,
-Compose 2.40.3, Python 3.12.14. No ReleaseReady service/database was started.
+Compose 2.40.3, Python 3.12.14. No BuildProveShip service/database was started.
 
 Repository audit before implementation: GitHub size 0, default branch name main,
 zero branches and open PRs; `git ls-remote` empty. Local repository had no commits
