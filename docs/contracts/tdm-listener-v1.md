@@ -6,13 +6,13 @@ endpoint, custom telemetry storage, visualization, authentication or live connec
 
 ## Source ownership and exact evidence
 
-Source owner: the `releaseready/test-data-management` HTTP transport lane. Source pin:
+Source owner: the `buildproveship/test-data-management` HTTP transport lane. Source pin:
 `43cd9feb2436fa99450d0100f211c528cf4db033`.
 
-- [`src/http/server.ts`](https://github.com/releaseready/test-data-management/blob/43cd9feb2436fa99450d0100f211c528cf4db033/src/http/server.ts)
+- [`src/http/server.ts`](https://github.com/buildproveship/test-data-management/blob/43cd9feb2436fa99450d0100f211c528cf4db033/src/http/server.ts)
   implements `GET /health`, HTTP 200 with `{"status":"available"}`. It runs after
   Host/Origin/concurrency gates and before bearer authentication.
-- [`openapi/tdm.mjs`](https://github.com/releaseready/test-data-management/blob/43cd9feb2436fa99450d0100f211c528cf4db033/openapi/tdm.mjs)
+- [`openapi/tdm.mjs`](https://github.com/buildproveship/test-data-management/blob/43cd9feb2436fa99450d0100f211c528cf4db033/openapi/tdm.mjs)
   documents process availability only, explicitly not vault or authority readiness.
 - A locked vault can coexist with a successful listener probe. An HTTP 403 can
   reflect the transport/concurrency gate; it is not proof of a storage failure.
