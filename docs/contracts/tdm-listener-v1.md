@@ -6,7 +6,7 @@ endpoint, custom telemetry storage, visualization, authentication or live connec
 
 ## Source ownership and exact evidence
 
-Source owner: the `releaseready/test-data-management` HTTP transport lane. Source pin:
+Source owner: the `buildproveship/test-data-management` HTTP transport lane. Source pin:
 `43cd9feb2436fa99450d0100f211c528cf4db033`.
 
 - [`src/http/server.ts`](https://github.com/buildproveship/test-data-management/blob/43cd9feb2436fa99450d0100f211c528cf4db033/src/http/server.ts)
