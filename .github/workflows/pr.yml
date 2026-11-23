@@ -75,7 +75,7 @@ jobs:
           scope: "@buildproveship"
       - name: Guardrails (static rules and jscpd)
         if: needs.changes.outputs.docs_only != 'true'
-        run: npx --yes --package @buildproveship/config@^5.0.0 releaseready-guardrails
+        run: npx --yes --package @buildproveship/config@5.0.1 releaseready-guardrails
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   security:
