@@ -4,7 +4,7 @@
 # only serves macOS-only nightly tests in ReleaseReady. This replaces the 12 Nov 2026 manual-only Actions decision (RRDPLAT-44).
 # No path filter on the trigger (RRDPLAT-103): a required check that never starts stays pending, so docs-only pull requests
 # are recognised inside the workflow by the `changes` job, and the required `checks` job still reports success. Same
-# logic as the reusable CI workflow in releaseready/config (reusable-ci.yml); that workflow runs npm, so it cannot be called here.
+# logic as the reusable CI workflow in buildproveship/config (reusable-ci.yml); that workflow runs npm, so it cannot be called here.
 name: Pull request
 on:
   pull_request:
@@ -89,4 +89,4 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: gitleaks, trivy, semgrep and zizmor
-        uses: releaseready/config/.github/actions/security-scan@546a5b59d69f15974cd3d6fa5801d9b977234a3e # v3.0.0
+        uses: buildproveship/config/.github/actions/security-scan@546a5b59d69f15974cd3d6fa5801d9b977234a3e # v3.0.0

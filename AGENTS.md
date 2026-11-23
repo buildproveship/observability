@@ -42,7 +42,7 @@ The check command is `sh scripts/check.sh` (ruff incl. PGH and BLE, mypy strict,
 ## Defects we don't create
 
 The rules come from the defects found in the 18 Nov 2026 cross-repo review. The full list and fixes are in the
-`releaseready-code-quality` skill: https://github.com/releaseready/config/tree/main/skill/releaseready-code-quality
+`releaseready-code-quality` skill: https://github.com/buildproveship/config/tree/main/skill/releaseready-code-quality
 
 <!-- TODO(RRDSCRUM-438): replace this link with the docs page once it exists. -->
 
